@@ -114,6 +114,7 @@ void ArbolBinario::insertRec(int data, Node* root)
         if (root->left == nullptr)
         {
             root->left = new Node(data);
+            root->left->parent = root;
             root->AlturaI++;
             root->Altura = root->AlturaD >= root->AlturaI ? root->AlturaD : root->AlturaI;
             //if (root->right == nullptr)
@@ -148,6 +149,7 @@ void ArbolBinario::insertRec(int data, Node* root)
         if (root->right == nullptr)
         {
             root->right = new Node(data);
+            root->right->parent = root;
             root->AlturaD++;
             root->Altura = root->AlturaD >= root->AlturaI ? root->AlturaD : root->AlturaI;
             //if (root->left == nullptr)
@@ -164,7 +166,7 @@ void ArbolBinario::insertRec(int data, Node* root)
             insertRec(data, root->right);
             root->AlturaD = root->right->Altura + 1;
             root->FactorEquilibrio = root->AlturaD - root->AlturaI;
-            if (root->right->FactorEquilibrio < -1 || root->right->FactorEquilibrio>1)
+            if (root->FactorEquilibrio < -1 || root->FactorEquilibrio>1)
             {
                 Balancear(root, root->FactorEquilibrio);
                 /*root->AlturaI = 0;
@@ -241,16 +243,27 @@ void ArbolBinario::rotarD(Node* root)
     {
         Node* nuevo = root->left;
         root->left = nullptr;
+        root->parent = nuevo;
         nuevo->right = root;
+        nuevo->parent = nullptr;
+        nuevo->right->parent = nuevo;
         root = nuevo;
         raiz = root;
     }
     else
     {
         Node* nuevo = root->left;
+        nuevo->parent = root->parent;
+        if (root->parent->data < nuevo->data)
+            root->parent->right = nuevo;
+        else
+            root->parent->left = nuevo;
+        root->parent = nuevo;
         root->left = nullptr;
         nuevo->right = root;
-        root = nuevo;
+        nuevo->right->parent = nuevo;
+        
+        //root = nuevo;
     }
     
 }
@@ -261,17 +274,25 @@ void ArbolBinario::rotarI(Node* root)
     {
         Node* nuevo = root->right;
         root->right = nullptr;
+        root->parent = nuevo;
         nuevo->left = root;
+        nuevo->parent = nullptr;
+        nuevo->left->parent = nuevo;
         root = nuevo;
         raiz = root;
     }
     else
     {
         Node* nuevo = root->right;
+        nuevo->parent = root->parent;
+        if (root->parent->data < nuevo->data)
+            root->parent->right = nuevo;
+        else
+            root->parent->left = nuevo;
+        root->parent = nuevo;
         root->right = nullptr;
         nuevo->left = root;
-        root = nuevo;
-        int n=0;
-        n++;
+        
+        //root = nuevo;
     }
 }

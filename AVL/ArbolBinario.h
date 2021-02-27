@@ -10,13 +10,14 @@ public:
     {
     public:
         Node(int data)
-            : data(data), left(nullptr), right(nullptr),FactorEquilibrio(0),Altura(0),AlturaD(0),AlturaI(0)
+            : data(data), left(nullptr), right(nullptr),FactorEquilibrio(0),Altura(0),AlturaD(0),AlturaI(0),parent(nullptr)
         {}
         void print();
         void print2();
         int data;
         Node* left;
         Node* right;
+        Node* parent;
         int Altura;
         int AlturaD;
         int AlturaI;

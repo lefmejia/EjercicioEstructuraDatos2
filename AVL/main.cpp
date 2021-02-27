@@ -16,6 +16,7 @@ int main()
 	avl.insert(1);
 	avl.insert(5);
 	avl.insert(7);
+	avl.insert(3);
 
 	std::cout << avl.AlturaArbol();
 }
