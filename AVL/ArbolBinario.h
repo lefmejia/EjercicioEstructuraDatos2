@@ -38,5 +38,7 @@ public:
 private:
     Node* raiz;
     void insertRec(int data, Node* root);
+    void printSubtree(Node* subtree, int depth, int level, bool first);
+    int spacing(int level);
 };
 #endif // !ARBOL_BINARIO_

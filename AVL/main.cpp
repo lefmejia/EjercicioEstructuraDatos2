@@ -18,5 +18,6 @@ int main()
 	avl.insert(7);
 	avl.insert(3);
 
-	std::cout << avl.AlturaArbol();
+	std::cout << avl.AlturaArbol()<<std::endl;
+	avl.print();
 }
