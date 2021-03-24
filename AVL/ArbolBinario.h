@@ -30,15 +30,19 @@ public:
     void insert(int data);
     void print();
     void print2();
-    void Balancear(Node*, int);
+    void eliminar(int);
     int AlturaArbol() {return raiz != nullptr ? (raiz->AlturaD > raiz->AlturaI? raiz->AlturaD : raiz->AlturaI) : 0; }
-    void rotarD(Node*);
-    void rotarI(Node*);
+    
 
 private:
     Node* raiz;
     void insertRec(int data, Node* root);
+    bool eliminarRec(int, Node*);
+    void reemplazarNodo(Node*, Node*);
     void printSubtree(Node* subtree, int depth, int level, bool first);
     int spacing(int level);
+    void Balancear(Node*, int);
+    void rotarD(Node*);
+    void rotarI(Node*);
 };
 #endif // !ARBOL_BINARIO_

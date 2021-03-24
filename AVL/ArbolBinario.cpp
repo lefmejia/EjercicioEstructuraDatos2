@@ -4,26 +4,7 @@
 #include <iomanip>
 
 
-void ArbolBinario::print()
-{
-   // raiz->print();
-   // std::cout << '\n';
-    if (raiz == nullptr)
-        std::cout << "Arbol vacio!" <<
-        std::endl;
 
-    else if (raiz->Altura > 4)
-        std::cout << "Not currently supported!" <<
-        std::endl;
-
-    else {
-        int max = raiz->Altura;
-        for (int depth = 0; depth <= max; depth++) {
-            printSubtree(raiz, depth, max - depth + 1, true);
-            std::cout << std::endl;
-        }
-    }
-}
 
 void ArbolBinario::print2()
 {
@@ -76,7 +57,7 @@ void ArbolBinario::insert(int data)
     }
 
     insertRec(data, raiz);
-    raiz->Altura = raiz->AlturaD >= raiz->AlturaI ? raiz->AlturaD : raiz->AlturaI;
+    raiz->Altura = (raiz->AlturaD >= raiz->AlturaI ? raiz->AlturaD : raiz->AlturaI) + 1;
 }
 
 void ArbolBinario::insertRec(int data, Node* root)
@@ -93,30 +74,18 @@ void ArbolBinario::insertRec(int data, Node* root)
             root->left->parent = root;
             root->AlturaI++;
             root->Altura = root->AlturaD >= root->AlturaI ? root->AlturaD : root->AlturaI;
-            //if (root->right == nullptr)
-            //{
-            //    //root->Altura++;
-            //    return 1;
-            //}
-            //else
-            //    return 0;
             return;
         }
         else
         {
-            //n = root->left;
             insertRec(data, root->left);
             root->AlturaI = root->left->Altura + 1;
             root->FactorEquilibrio = root->AlturaD - root->AlturaI;
             if (root->FactorEquilibrio < -1 || root->FactorEquilibrio>1)
             {
                 Balancear(root, root->FactorEquilibrio);
-                /*root->AlturaI = 0;
-                root->AlturaD = 0;*/
                 
             }
-            root->Altura = root->AlturaD >= root->AlturaI ? root->AlturaD : root->AlturaI;
-            return;
         }
 
     }
@@ -128,13 +97,6 @@ void ArbolBinario::insertRec(int data, Node* root)
             root->right->parent = root;
             root->AlturaD++;
             root->Altura = root->AlturaD >= root->AlturaI ? root->AlturaD : root->AlturaI;
-            //if (root->left == nullptr)
-            //{
-            //    //root->Altura++;
-            //    return 1;
-            //}
-            //else
-            //    return 0;
             return;
         }
         else
@@ -145,14 +107,18 @@ void ArbolBinario::insertRec(int data, Node* root)
             if (root->FactorEquilibrio < -1 || root->FactorEquilibrio>1)
             {
                 Balancear(root, root->FactorEquilibrio);
-                /*root->AlturaI = 0;
-                root->AlturaD = 0;*/
                 
             }
-            root->Altura = root->AlturaD >= root->AlturaI ? root->AlturaD : root->AlturaI;
-            return;
         }
     }
+
+    if (root->right != nullptr)
+        root->AlturaD = root->right->Altura + 1;
+
+    if (root->left != nullptr)
+        root->AlturaI = root->left->Altura + 1;
+
+    root->Altura = root->AlturaD >= root->AlturaI ? root->AlturaD : root->AlturaI;
 }
 
 void ArbolBinario::Balancear(Node* root, int FE)
@@ -164,12 +130,12 @@ void ArbolBinario::Balancear(Node* root, int FE)
             root->AlturaI = 0;
             root->AlturaD = 0;
             root->Altura = 0;
-            root->left->AlturaI = 0;
+            root->left->AlturaI = 1;
             root->left->AlturaD = 0;
-            root->left->Altura = 0;
-            root->left->right->AlturaD += 1;
-            root->left->right->AlturaI += 1;
-            root->left->right->Altura += 1;
+            root->left->Altura = 1;
+            root->left->right->AlturaD = 1;
+            root->left->right->AlturaI = 1;
+            root->left->right->Altura = 1;
             rotarI(root->left);
             rotarD(root);
         }
@@ -178,8 +144,8 @@ void ArbolBinario::Balancear(Node* root, int FE)
             root->AlturaI = 0;
             root->AlturaD = 0;
             root->Altura = 0;
-            root->left->AlturaI += 0;
-            root->left->AlturaD += 1;
+            //root->left->AlturaI += 0;
+            root->left->AlturaD = 1;
             root->left->Altura = root->left->AlturaD > root->left->AlturaI ? root->left->AlturaD : root->left->AlturaI;
             rotarD(root);
         }
@@ -192,11 +158,11 @@ void ArbolBinario::Balancear(Node* root, int FE)
             root->AlturaD = 0;
             root->Altura = 0;
             root->right->AlturaI = 0;
-            root->right->AlturaD = 0;
-            root->right->Altura = 0;
-            root->right->left->Altura += 1;
-            root->right->left->AlturaD += 1;
-            root->right->left->AlturaI += 1;
+            root->right->AlturaD = 1;
+            root->right->Altura = 1;
+            root->right->left->Altura = 1;
+            root->right->left->AlturaD = 1;
+            root->right->left->AlturaI = 1;
             rotarD(root->right);
             rotarI(root);
         }
@@ -205,8 +171,8 @@ void ArbolBinario::Balancear(Node* root, int FE)
             root->AlturaI = 0;
             root->AlturaD = 0;
             root->Altura = 0;
-            root->right->AlturaI += 1;
-            root->right->AlturaD += 0;
+            root->right->AlturaI = 1;
+            //root->right->AlturaD = 0;
             root->right->Altura = root->right->AlturaD > root->right->AlturaI ? root->right->AlturaD : root->right->AlturaI;
             rotarI(root);
         }
@@ -218,43 +184,31 @@ void ArbolBinario::rotarD(Node* root)
     if (root == raiz)
     {
         Node* nuevo = root->left;
-        root->left = root->left->right;
+        root->left = nuevo->right;
         root->parent = nuevo;
+        if (nuevo->right != nullptr)
+            nuevo->right->parent = root;
         nuevo->right = root;
         nuevo->parent = nullptr;
-        nuevo->right->parent = nuevo;
-        root = nuevo;
-        raiz = root;
+        raiz = nuevo;
     }
     else
     {
         Node* nuevo = root->left;
         nuevo->parent = root->parent;
+        root->left = nuevo->right;
+        if (nuevo->right != nullptr)
+            nuevo->right->parent = root;
         nuevo->right = root;
 
         if (root->parent->data < nuevo->data)
             root->parent->right = nuevo;
         else
             root->parent->left = nuevo;
+
+
         root->parent = nuevo;
 
-        if (root->left->right != nullptr)
-        {
-            root->parent = root->left;
-            root->left = root->left->right;
-        }
-        else if (root->left->left != nullptr)
-        {
-            root->parent = root->left;
-            root->parent->right = root->left->left;
-        }
-        else
-        {
-            root->left = nullptr;
-        }
-        //nuevo->right->parent = nuevo;
-        
-        //root = nuevo;
     }
     
 }
@@ -264,47 +218,174 @@ void ArbolBinario::rotarI(Node* root)
     if (root == raiz)
     {
         Node* nuevo = root->right;
-        root->right = root->right->left;
+        root->right = nuevo->left;
         root->parent = nuevo;
+        if (nuevo->left != nullptr)
+            nuevo->left->parent = root;
         nuevo->left = root;
         nuevo->parent = nullptr;
-        nuevo->left->parent = nuevo;
-        root = nuevo;
-        raiz = root;
+        raiz = nuevo;
     }
     else
     {
         Node* nuevo = root->right;
         nuevo->parent = root->parent;
+        root->right = nuevo->left;
+        if (nuevo->left != nullptr)
+            nuevo->left->parent = root;
         nuevo->left = root;
+        
         if (root->parent->data < nuevo->data)
             root->parent->right = nuevo;
         else
             root->parent->left = nuevo;
-        root->parent = nuevo;
-
-        if (root->right->left != nullptr)
-        {
-            root->parent = root->right;
-            root->right = root->right->left;
-        }
-        else if (root->right->right != nullptr)
-        {
-            root->parent = root->right;
-            root->parent->left = root->right->right;
-        }
-        else
-        {
-            root->right = nullptr;
-        }
         
-        //nuevo->left->parent = nuevo;
-        //root = nuevo;
+        root->parent = nuevo;
     }
 }
 
-void ArbolBinario::printSubtree(Node* subtree, int depth,
-    int level, bool first) {
+void ArbolBinario::eliminar(int data)
+{
+    eliminarRec(data, raiz);
+}
+
+bool ArbolBinario::eliminarRec(int data, Node* root)
+{
+    if (data == root->data)
+    {
+        
+        
+        if (root->left == nullptr && root->right == nullptr)
+        {
+            reemplazarNodo(root, nullptr);
+
+        }
+        else if (root->left != nullptr)
+        {
+            Node* temp = root->left;
+            while (temp->right != nullptr)
+                temp = temp->right;
+
+            reemplazarNodo(root, temp);
+        }
+        else if(root->right != nullptr)
+        {
+            reemplazarNodo(root, root->right);
+        }
+
+        return true;
+    }
+    else if (data < root->data)
+    {
+        if(root->left!=nullptr)
+            if (eliminarRec(data, root->left))
+            {
+                root->AlturaI--;
+                root->Altura = root->AlturaD >= root->AlturaI ? root->AlturaD : root->AlturaI;
+                root->FactorEquilibrio = root->AlturaD - root->AlturaI;
+                if (root->FactorEquilibrio < -1 || root->FactorEquilibrio>1)
+                {
+                    Balancear(root, root->FactorEquilibrio);
+
+                }
+            }
+        else
+        {
+            std::cout << "Numero no existe\n";
+            return false;
+        }
+    }
+    else
+    {
+        if(root->right!=nullptr)
+            if (eliminarRec(data, root->right))
+            {
+                root->AlturaD--;
+                root->Altura = root->AlturaD >= root->AlturaI ? root->AlturaD : root->AlturaI;
+                root->FactorEquilibrio = root->AlturaD - root->AlturaI;
+                if (root->FactorEquilibrio < -1 || root->FactorEquilibrio>1)
+                {
+                    Balancear(root, root->FactorEquilibrio);
+
+                }
+            }
+        else
+        {
+            std::cout << "Numero no existe\n";
+            return false;
+        }
+    }
+}
+
+void ArbolBinario::reemplazarNodo(Node* root, Node* reemplazo)
+{
+    if (root == raiz)
+    {
+        raiz = reemplazo;
+    }
+    else if (root->parent->data > root->data)
+        root->parent->left = reemplazo;
+    else
+        root->parent->right = reemplazo;
+
+    if (reemplazo == nullptr)
+        return;
+    else
+        reemplazo->parent = root->parent;
+
+    if (reemplazo->left != nullptr)
+    {
+        Node* nuevo = reemplazo->left;
+        while (nuevo->right != nullptr)
+            nuevo = nuevo->right;
+
+        reemplazo->right = root->right;
+        reemplazo->left = root->left;
+        /*reemplazo->AlturaD = reemplazo->right->Altura;
+        reemplazo->AlturaI = reemplazo->left->Altura;
+        reemplazo->Altura = reemplazo->AlturaD > reemplazo->AlturaI ? reemplazo->AlturaD : reemplazo->AlturaI;
+        reemplazo->FactorEquilibrio = reemplazo->AlturaD - reemplazo->AlturaI;
+        Balancear(reemplazo, reemplazo->FactorEquilibrio);*/
+        reemplazarNodo(reemplazo, nuevo);
+    }
+    else if (reemplazo->right != nullptr)
+    {
+        Node* nuevo = reemplazo->right;
+        reemplazo->right = root->right;
+        reemplazo->left = root->left;
+        /*reemplazo->AlturaD = reemplazo->right->Altura;
+        reemplazo->AlturaI = reemplazo->left->Altura;
+        reemplazo->Altura = reemplazo->AlturaD > reemplazo->AlturaI ? reemplazo->AlturaD : reemplazo->AlturaI;
+        reemplazo->FactorEquilibrio = reemplazo->AlturaD - reemplazo->AlturaI;
+        Balancear(reemplazo, reemplazo->FactorEquilibrio);*/
+        reemplazarNodo(reemplazo, nuevo);
+    }
+
+}
+
+void ArbolBinario::print()
+{
+    // raiz->print();
+    // std::cout << '\n';
+    if (raiz == nullptr)
+    {
+        std::cout << "Arbol vacio!" <<
+            std::endl;
+    }
+    /* else if (raiz->Altura > 4)
+         std::cout << "Not currently supported!" <<
+         std::endl;*/
+
+    else {
+        int max = raiz->Altura;
+        for (int depth = 0; depth <= max; depth++) {
+            printSubtree(raiz, depth, max - depth + 1, true);
+            std::cout << std::endl;
+        }
+    }
+}
+
+void ArbolBinario::printSubtree(Node* subtree, int depth, int level, bool first) {
 
     if (depth > 0) {
         if (subtree == nullptr) {
@@ -326,11 +407,12 @@ void ArbolBinario::printSubtree(Node* subtree, int depth,
         std::cout << std::setw((first) ?
             spacing(level) / 2 : spacing(level)) <<
         subtree->data;
+
 }
 
 int ArbolBinario::spacing(int level) {
-    int result = 2;
+    int result = 3;
     for (int i = 0; i < level; i++)
         result += result;
-    return result;
+    return result/2;
 }
