@@ -23,16 +23,25 @@ struct record
 	char businessname[50];
 };
 
+struct reference
+{
+	long id;
+	char lastname[30];
+};
+
 
 class ArchivoIndice
 {
 private:
-	string llave;
-	long referencia;
+	char llave[30];
+	long ref;
 
 public:
-	void crearIndice(string, long);
-	long getReferencia(string);
+	void crearIndice(const char*, long);
+	long getReferencia(const char*);
+	void leerArchivo();
+	void buscarRegistro(const char*);
+	void print(record&);
 };
 
 
